@@ -1,5 +1,6 @@
 import { Button } from '@mui/material'
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
 const SingleBlogListItem = () => {
@@ -15,7 +16,7 @@ const SingleBlogListItem = () => {
                         <h4 className="card-title fw-bold">Medium is Dead due to it's paid version people switching to codeblogs</h4>
                         <p className="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                         <p className="card-text"><small className="text-body-secondary">Last updated 3 mins ago</small></p>
-                        <Button variant='contained' className='rounded text-capitalize'>Read Blog</Button>
+                        <Link href={"/blog/single-blog"} className='rounded text-capitalize'>Read Blog</Link>
                     </div>
                 </div>
             </div>

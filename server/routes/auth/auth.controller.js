@@ -19,8 +19,9 @@ const registerHandler = async (req, res) => {
   if (!validated.error) {
     try {
       //Check if user already registered
-      const emailCheck = await User.findOne({ email: req.body.email });
-      if (emailCheck) {
+      const emailCheck = await User.findOne({ email: validated.value.email });
+      const phoneCheck = await User.findOne({ phone: validated.value.phone });
+      if (emailCheck || phoneCheck) {
         res.status(409).send({ message: "User Already Registered" });
       } else {
         //hash the password
@@ -28,6 +29,9 @@ const registerHandler = async (req, res) => {
         const user = new User({
           name: validated.value.name,
           email: validated.value.email,
+          role: validated.value.role,
+          phone: validated.value.phone,
+          address: validated.value.address,
           password: hashedPassword,
         });
         const savedUser = await user.save(user);
@@ -35,7 +39,7 @@ const registerHandler = async (req, res) => {
         const Json_Token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
         res.status(200).send({
           jwt: Json_Token,
-          user: { id: user._id, name: user.name, email: user.email },
+          user: { id: user._id, name: user.name, email: user.email, role: user.role },
           message: "new user saved succcessfuly",
           status: "success",
         });

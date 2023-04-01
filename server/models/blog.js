@@ -5,7 +5,7 @@ const blogSchema = new mongoose.Schema({
   slug: { type: String, unique: true },
   img: String,
   bgimg: String,
-  author: String,
+  author: { type: mongoose.Types.ObjectId, ref: "user", },
   content: String,
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },

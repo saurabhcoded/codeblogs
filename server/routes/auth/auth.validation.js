@@ -5,8 +5,12 @@ function registerValidation(data) {
   //validation
   const schema = Joi.object({
     name: Joi.string().min(6).required(),
+    role: Joi.string().valid('reader', 'author', 'admin').required(),
     email: Joi.string().min(6).required().email(),
-    password: Joi.string().min(6).required(),
+    phone: Joi.number().min(10).required(),
+    password: Joi.string().min(10).required(),
+    confirm_password: Joi.string().min(10).required(),
+    address: Joi.string().required(),
   });
 
   return schema.validate(data);
@@ -16,7 +20,7 @@ function loginValidation(data) {
   //validation
   const schema = Joi.object({
     email: Joi.string().min(6).required().email(),
-    password: Joi.string().min(6).required(),
+    password: Joi.string().min(10).required(),
   });
 
   return schema.validate(data);
