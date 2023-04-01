@@ -22,7 +22,7 @@ const registerHandler = async (req, res) => {
       const emailCheck = await User.findOne({ email: validated.value.email });
       const phoneCheck = await User.findOne({ phone: validated.value.phone });
       if (emailCheck || phoneCheck) {
-        res.status(409).send({ message: "User Already Registered" });
+        res.json({ status: "warning", message: "User Already Registered" });
       } else {
         //hash the password
         const hashedPassword = await hashingPassword(req.body.password);
@@ -37,7 +37,8 @@ const registerHandler = async (req, res) => {
         const savedUser = await user.save(user);
         //Jsonweb token authorization
         const Json_Token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-        res.status(200).send({
+        res.json({
+          status: "success",
           jwt: Json_Token,
           user: { id: user._id, name: user.name, email: user.email, role: user.role },
           message: "new user saved succcessfuly",
@@ -46,10 +47,14 @@ const registerHandler = async (req, res) => {
       }
     } catch (error) {
       clog.error(error);
-      res.status(500).send({ message: "Internal Server Error" });
+      res.json({
+        status: "error",
+        message: "Internal Server Error"
+      });
     }
   } else {
-    res.status(403).json({
+    res.json({
+      status: "error",
       message: validated.error.message,
     });
   }
@@ -62,7 +67,7 @@ const loginHandler = async (req, res) => {
       //Check if email already exist
       const user = await User.findOne({ email: req.body.email });
       if (!user)
-        return res.status(302).json({
+        return res.json({
           message: "email or password is incorrect",
           status: "error",
         });
@@ -71,20 +76,22 @@ const loginHandler = async (req, res) => {
       if (validPass) {
         //Jsonweb token authorization
         const Json_Token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-        return res.status(200).json({
+        return res.json({
+          status: "success",
           jwt: Json_Token,
-          user: { id: user._id, name: user.name, email: user.email },
+          user: { id: user._id, name: user.name, email: user.email, role: user.role },
           message: "Logged in SuccessFully",
         });
       } else {
-        res.status(390).send({ message: "Password or email is invalid", status: "error" });
+        res.json({ message: "Password or email is invalid", status: "error" });
       }
     } catch (err) {
-      res.status(404).send({ message: "Server Error", status: "error" });
+      res.json({ message: "Server Error", status: "error" });
     }
   } else {
-    res.status(403).json({
-      message: validated.error.message,
+    res.json({
+      status: "error",
+      message: validated.error.message.replace('"', ''),
     });
   }
 };

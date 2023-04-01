@@ -12,3 +12,12 @@
   margin: 0;
   font-family: "Lexend", sans-serif;
 }
+
+.form-control {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  font-size: medium;
+}
+a {
+  text-decoration: initial;
+}
