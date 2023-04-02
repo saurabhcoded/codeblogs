@@ -7,6 +7,7 @@ const experienceSchema = new mongoose.Schema({
   bgcolor: String,
   color: String,
   location: String,
+  author: { type: mongoose.Types.ObjectId, ref: "user", },
   description: String,
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },

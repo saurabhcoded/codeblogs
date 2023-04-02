@@ -5,6 +5,7 @@ const testimonialSchema = new mongoose.Schema({
   name: String,
   company: String,
   description: String,
+  author: { type: mongoose.Types.ObjectId, ref: "user", },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
 });
