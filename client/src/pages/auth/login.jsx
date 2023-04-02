@@ -9,8 +9,6 @@ const Login = () => {
     const { apiJson } = useApi();
     const router = useRouter();
     const { user, setUser, token, setToken } = useGlobalContext();
-    console.log("user", user);
-    console.log("token", token);
     //Check for user Loggedin Or Not
     useEffect(() => {
         if (user) {
@@ -27,7 +25,6 @@ const Login = () => {
                 toast.dismiss();
                 toast.loading("Signing you in");
                 const response = await apiJson.post("/auth/login", values)
-                console.log(response);
                 switch (response?.data?.status) {
                     case "success":
                         toast.dismiss();
@@ -47,7 +44,6 @@ const Login = () => {
                         break;
                 }
             } catch (error) {
-                console.log(error);
                 let msg = error?.response?.data?.message ? error?.response?.data?.message : "Oops Something Went Wrong!"
                 toast.dismiss();
                 toast.error(msg);

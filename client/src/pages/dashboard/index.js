@@ -1,13 +1,46 @@
 import { useGlobalContext } from '@/context/globalContext'
+import BlogsTable from '@/layout/BlogsTable'
+import SingleBlogListItem from '@/layout/SingleBlogListItem'
 import BlogCard from '@/layout/components/BlogCard'
 import LoginChecker from '@/layout/components/LoginChecker'
+import useApi from '@/lib/useApi'
 import { Edit, Web, WebTwoTone } from '@mui/icons-material'
 import { Avatar, Button } from '@mui/material'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 
 const Dashboard = () => {
-  const { user } = useGlobalContext()
+  const { user, token } = useGlobalContext();
+  const [blogs, setBlogs] = useState([]);
+  const ENDPOINT = useApi();
+  const fetchAllBlogs = async () => {
+    if (token) {
+      try {
+        const response = await ENDPOINT.authjson.get("/blogs/me");
+        console?.log(response)
+        switch (response?.data?.status) {
+          case "success":
+            setBlogs(response?.data?.result)
+            break;
+          case "error":
+            toast.error(response?.data?.message);
+            break;
+          case "warning":
+            toast.warning(response?.data?.message);
+            break;
+        }
+      } catch (error) {
+        console.log(error);
+        let msg = error?.response?.data?.message ? error?.response?.data?.message : "Oops Something Went Wrong!"
+        toast.error(msg);
+      }
+    }
+  }
+  useEffect(() => {
+    fetchAllBlogs();
+  }, [token])
   return (
     <>
       <LoginChecker />
@@ -28,21 +61,12 @@ const Dashboard = () => {
                 </span>
               </div>
               <div className="col-12 col-lg-3">
-                <Button variant='contained' size='large' className='rounded text-capitalize'><Edit />&nbsp;Write Blog</Button>
+                <Link href={"/dashboard/add"} passHref><Button variant='contained' size='large' className='rounded text-capitalize'><Edit />&nbsp;Write Blog</Button></Link>
               </div>
             </div>
           </div>
-          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-2 pb-5">
-            <div className="col">
-              <BlogCard />
-            </div>
-            <div className="col">
-              <BlogCard />
-            </div>
-            <div className="col">
-              <BlogCard />
-            </div>
-          </div>
+          {/* List Of Blogs  */}
+          <BlogsTable blogs={blogs} reload={fetchAllBlogs} />
           <nav aria-label="Page navigation example">
             <ul className="pagination">
               <li className="page-item"><a className="page-link" href="#">Previous</a></li>
@@ -57,4 +81,4 @@ const Dashboard = () => {
     </>
   )
 }
-export default Dashboard
+export default Dashboard;

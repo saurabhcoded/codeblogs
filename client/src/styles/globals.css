@@ -21,3 +21,7 @@
 a {
   text-decoration: initial;
 }
+
+.table-designed th,td{
+  padding: 15px;
+}

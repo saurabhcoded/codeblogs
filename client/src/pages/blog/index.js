@@ -1,9 +1,12 @@
 import SingleBlogListItem from '@/layout/SingleBlogListItem'
 import SingleBloggerListItem from '@/layout/SingleBloggerListItem'
+import useApi from '@/lib/useApi'
 import { ArrowBackIos, ArrowBackIosTwoTone, ArrowForwardIosTwoTone } from '@mui/icons-material'
 import React from 'react'
+import { toast } from 'react-toastify'
 
-const Blog = () => {
+const Blog = ({ blogs }) => {
+    const ENDPOINT = useApi();
     return (
         <>
             <div className="bg-light py-3">
@@ -35,23 +38,20 @@ const Blog = () => {
                                 </div>
                             </div>
                             {/* List Of Blogs  */}
-                            <div className='row row-cols-1 g-3'>
-                                <div className="col">
-                                    <SingleBlogListItem />
-                                </div>
-                                <div className="col">
-                                    <SingleBlogListItem />
-                                </div>
+                            <div className='row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-3'>
+                                {blogs?.result?.map((blog, i) => {
+                                    return <div className='col' key={i}><SingleBlogListItem blog={blog} /></div>
+                                })}
                             </div>
                             {/* Pagination  */}
                             <div className='py-4'>
                                 <nav aria-label="Page navigation example">
-                                    <ul class="pagination justify-content-center">
-                                        <li class="page-item"><a class="page-link h-100" href="#"><ArrowBackIosTwoTone/></a></li>
-                                        <li class="page-item"><a class="page-link h-100" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link h-100" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link h-100" href="#">3</a></li>
-                                        <li class="page-item"><a class="page-link h-100" href="#"><ArrowForwardIosTwoTone/></a></li>
+                                    <ul className="pagination justify-content-center">
+                                        <li className="page-item"><a className="page-link h-100" href="#"><ArrowBackIosTwoTone /></a></li>
+                                        <li className="page-item"><a className="page-link h-100" href="#">1</a></li>
+                                        <li className="page-item"><a className="page-link h-100" href="#">2</a></li>
+                                        <li className="page-item"><a className="page-link h-100" href="#">3</a></li>
+                                        <li className="page-item"><a className="page-link h-100" href="#"><ArrowForwardIosTwoTone /></a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -72,3 +72,15 @@ const Blog = () => {
 }
 
 export default Blog
+
+export async function getServerSideProps({ params, req, res, query, preview, previewData, resolvedUrl, locale, locales, defaultLocale }) {
+    if (query.text) {
+        return { redirect: { destination: '/dashboard', permanent: false, }, }
+    }
+    const data = await fetch('http:localhost:5000/api/blogs');
+    const blogs = await data.json();
+    if (!data) {
+        return { notFound: true, }
+    }
+    return { props: { blogs } }
+}
