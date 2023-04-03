@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { Context } from '@/context/globalContext';
 import { ToastContainer } from 'react-toastify';
 import MaterialTheme from '@/layout/MaterialTheme';
+import { Toaster } from 'react-hot-toast';
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -15,6 +16,7 @@ export default function App({ Component, pageProps }) {
   })
   return (
     <Context>
+      <Toaster/>
       <ToastContainer />
       <MaterialTheme>
         <Layout>

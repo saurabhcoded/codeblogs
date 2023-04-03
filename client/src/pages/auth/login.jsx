@@ -3,10 +3,10 @@ import useApi from '@/lib/useApi'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react'
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 
 const Login = () => {
-    const { apiJson } = useApi();
+    const ENDPOINT = useApi();
     const router = useRouter();
     const { user, setUser, token, setToken } = useGlobalContext();
     //Check for user Loggedin Or Not
@@ -24,7 +24,7 @@ const Login = () => {
             try {
                 toast.dismiss();
                 toast.loading("Signing you in");
-                const response = await apiJson.post("/auth/login", values)
+                const response = await ENDPOINT.json.post("/auth/login", values)
                 switch (response?.data?.status) {
                     case "success":
                         toast.dismiss();
@@ -38,12 +38,13 @@ const Login = () => {
                         break;
                     case "warning":
                         toast.dismiss();
-                        toast.warning(response?.data?.message);
+                        toast.error(response?.data?.message);
                         break;
                     default:
                         break;
                 }
             } catch (error) {
+                console.log(error)
                 let msg = error?.response?.data?.message ? error?.response?.data?.message : "Oops Something Went Wrong!"
                 toast.dismiss();
                 toast.error(msg);

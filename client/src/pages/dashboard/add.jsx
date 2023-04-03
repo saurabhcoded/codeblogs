@@ -32,7 +32,7 @@ const AddBlog = () => {
                         break;
                     case "warning":
                         toast.dismiss();
-                        toast.warning(response?.data?.message);
+                        toast.error(response?.data?.message);
                         break;
                     default:
                         toast.dismiss();

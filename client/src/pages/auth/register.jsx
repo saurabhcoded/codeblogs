@@ -5,7 +5,7 @@ import { Button } from '@mui/material'
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react'
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 
 const Register = () => {
     const { apiJson } = useApi();
@@ -47,7 +47,7 @@ const Register = () => {
                         break;
                     case "warning":
                         toast.dismiss();
-                        toast.warning(response?.data?.message)
+                        toast.error(response?.data?.message)
                         break;
                     default:
                         break;

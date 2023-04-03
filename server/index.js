@@ -34,3 +34,5 @@ mongoose
 app.listen(PORT, () => {
   clog.success("Server is Running over port " + PORT);
 });
+
+module.exports = app;
