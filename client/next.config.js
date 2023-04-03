@@ -7,9 +7,18 @@ const nextConfig = {
         protocol: 'http',
         hostname: 'localhost',
         port: '5000',
+
         pathname: '/**',
       },
     ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://codeblogs-server.vercel.app/:path*',
+      },
+    ]
   },
 }
 
