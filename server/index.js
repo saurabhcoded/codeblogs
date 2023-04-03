@@ -5,7 +5,6 @@ const cors = require("cors");
 const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-
 //==================== MiddleWares ====================
 app.use(cors());
 app.use("/", express.static(__dirname + "/views"));

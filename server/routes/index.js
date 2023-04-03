@@ -16,5 +16,8 @@ app.use("/tech", techRouter);
 app.use("/project", projectRouter);
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
+app.get("/", (req, res) => {
+    res.send("Server is Working here")
+})
 
 module.exports = app;
