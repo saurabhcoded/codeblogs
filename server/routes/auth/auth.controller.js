@@ -10,53 +10,60 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { registerValidation, loginValidation, hashingPassword } = require("./auth.validation");
 const clog = require("../../utils/chalk");
+const { imgUrl } = require("../../utils/upload");
 
 //register route
 const registerHandler = async (req, res) => {
   //   Validate data before saving
   const validated = await registerValidation(req.body);
+  const profile = imgUrl(req.file);
   clog.info(req.body);
-  if (!validated.error) {
-    try {
-      //Check if user already registered
-      const emailCheck = await User.findOne({ email: validated.value.email });
-      const phoneCheck = await User.findOne({ phone: validated.value.phone });
-      if (emailCheck || phoneCheck) {
-        res.json({ status: "warning", message: "User Already Registered" });
-      } else {
-        //hash the password
-        const hashedPassword = await hashingPassword(req.body.password);
-        const user = new User({
-          name: validated.value.name,
-          email: validated.value.email,
-          role: validated.value.role,
-          phone: validated.value.phone,
-          address: validated.value.address,
-          password: hashedPassword,
-        });
-        const savedUser = await user.save(user);
-        //Jsonweb token authorization
-        const Json_Token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+  if (profile) {
+    if (!validated.error) {
+      try {
+        //Check if user already registered
+        const emailCheck = await User.findOne({ email: validated.value.email });
+        const phoneCheck = await User.findOne({ phone: validated.value.phone });
+        if (emailCheck || phoneCheck) {
+          res.json({ status: "warning", message: "User Already Registered" });
+        } else {
+          //hash the password
+          const hashedPassword = await hashingPassword(req.body.password);
+          const user = new User({
+            profile: profile,
+            name: validated.value.name,
+            email: validated.value.email,
+            role: validated.value.role,
+            phone: validated.value.phone,
+            address: validated.value.address,
+            password: hashedPassword,
+          });
+          await user.save(user);
+          //Jsonweb token authorization
+          const Json_Token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+          res.json({
+            status: "success",
+            jwt: Json_Token,
+            user: { id: user._id, name: user.name, profile: user.profile, email: user.email, role: user.role },
+            message: "new user saved succcessfuly",
+            status: "success",
+          });
+        }
+      } catch (error) {
+        clog.error(error);
         res.json({
-          status: "success",
-          jwt: Json_Token,
-          user: { id: user._id, name: user.name, email: user.email, role: user.role },
-          message: "new user saved succcessfuly",
-          status: "success",
+          status: "error",
+          message: "Internal Server Error"
         });
       }
-    } catch (error) {
-      clog.error(error);
+    } else {
       res.json({
         status: "error",
-        message: "Internal Server Error"
+        message: validated.error.message,
       });
     }
   } else {
-    res.json({
-      status: "error",
-      message: validated.error.message,
-    });
+    res.json({ status: "error", message: "Profile Image is required" });
   }
 };
 //Login route
@@ -79,7 +86,7 @@ const loginHandler = async (req, res) => {
         return res.json({
           status: "success",
           jwt: Json_Token,
-          user: { id: user._id, name: user.name, email: user.email, role: user.role },
+          user: { id: user._id, name: user.name, profile: user.profile, email: user.email, role: user.role },
           message: "Logged in SuccessFully",
         });
       } else {

@@ -8,7 +8,7 @@ import React, { useEffect } from 'react'
 import { toast } from 'react-hot-toast';
 
 const Register = () => {
-    const { apiJson } = useApi();
+    const ENDPOINT = useApi();
     const router = useRouter();
     const { user, setUser, token, setToken } = useGlobalContext();
     //Check for user Loggedin Or Not
@@ -20,6 +20,7 @@ const Register = () => {
     //Register Form
     const registerForm = useFormik({
         initialValues: {
+            profile: "",
             name: "",
             email: "",
             phone: "",
@@ -32,8 +33,7 @@ const Register = () => {
             try {
                 toast.dismiss();
                 toast.loading("Creating Your Account");
-                const response = await apiJson.post("/auth/register", values)
-                console.log(response);
+                const response = await ENDPOINT.formdata.post("/auth/register", values)
                 switch (response?.data?.status) {
                     case "success":
                         toast.dismiss();
@@ -53,7 +53,6 @@ const Register = () => {
                         break;
                 }
             } catch (error) {
-                console.log(error);
                 let msg = error?.response?.data?.message ? error?.response?.data?.message : "Oops Something Went Wrong!"
                 toast.dismiss();
                 toast.error(msg);
@@ -69,6 +68,10 @@ const Register = () => {
                         <hr />
                         {/* simple login  */}
                         <form onSubmit={registerForm.handleSubmit}>
+                            <div className="form-group mb-2">
+                                <label htmlFor="name" className="form-label">Profile Picture</label>
+                                <input type="file" onChange={(e) => registerForm.setFieldValue("profile", e.target.files[0])} className="form-control form-control-lg" />
+                            </div>
                             <div className="form-group mb-2">
                                 <label htmlFor="name" className="form-label">Full Name</label>
                                 <input id='name' name='name' onChange={registerForm.handleChange} value={registerForm.values.name} type="text" className="form-control form-control-lg" />

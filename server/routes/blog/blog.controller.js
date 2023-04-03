@@ -4,9 +4,12 @@ const BLOG = require("../../models/blog");
 const clog = require("../../utils/chalk");
 const { imgUrl } = require("../../utils/upload");
 const getBlogs = async (req, res) => {
+  console.log("query", req.query);
+  const page = req?.query?.page ? req?.query?.page : 0;
   try {
-    const result = await BLOG.find().populate("author", "name _id profile");
-    res.json({ status: "success", result });
+    const blogsCount = await BLOG.count();
+    const result = await BLOG.find().populate("author", "name _id profile").limit(10).skip(page * 10);
+    res.json({ status: "success", result, count: blogsCount });
   } catch (error) {
     clog.error(error);
     res.json({ status: "error", message: "Internal Server Error" });

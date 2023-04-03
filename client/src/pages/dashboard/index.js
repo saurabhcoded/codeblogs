@@ -1,25 +1,28 @@
 import { useGlobalContext } from '@/context/globalContext'
 import BlogsTable from '@/layout/BlogsTable'
 import SingleBlogListItem from '@/layout/SingleBlogListItem'
+import UsersTable from '@/layout/UsersTable'
 import BlogCard from '@/layout/components/BlogCard'
 import LoginChecker from '@/layout/components/LoginChecker'
 import useApi from '@/lib/useApi'
 import { Edit, Web, WebTwoTone } from '@mui/icons-material'
 import { Avatar, Button } from '@mui/material'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
+import { toast } from 'react-hot-toast'
 
 const Dashboard = () => {
   const { user, token } = useGlobalContext();
   const [blogs, setBlogs] = useState([]);
+  const [users, setUsers] = useState([]);
+  const router = useRouter();
   const ENDPOINT = useApi();
   const fetchAllBlogs = async () => {
     if (token) {
       try {
         const response = await ENDPOINT.authjson.get("/blogs/me");
-        console?.log(response)
         switch (response?.data?.status) {
           case "success":
             setBlogs(response?.data?.result)
@@ -32,53 +35,92 @@ const Dashboard = () => {
             break;
         }
       } catch (error) {
-        console.log(error);
         let msg = error?.response?.data?.message ? error?.response?.data?.message : "Oops Something Went Wrong!"
         toast.error(msg);
       }
     }
   }
+  const fetchAllUsers = async () => {
+    if (token && user?.role === "admin") {
+      try {
+        const response = await ENDPOINT.authjson.get("/users");
+        console?.log(response);
+        switch (response?.data?.status) {
+          case "success":
+            setUsers(response?.data?.result)
+            break;
+          case "error":
+            toast.dismiss();
+            toast.error(response?.data?.message);
+            break;
+          case "warning":
+            toast.dismiss();
+            toast.error(response?.data?.message);
+            break;
+        }
+      } catch (error) {
+        let msg = error?.response?.data?.message ? error?.response?.data?.message : "Oops Something Went Wrong!"
+        toast.dismiss();
+        toast.error(msg);
+      }
+    }
+  }
   useEffect(() => {
+    if (user?.role === "admin") {
+      fetchAllUsers();
+    }
     fetchAllBlogs();
-  }, [token])
-  return (
-    <>
-      <LoginChecker />
-      <div>
-        <div style={{ position: "relative", minHeight: 250, background: "url(/images/banner/banner.webp) no-repeat center", backgroundSize: "cover" }}>
-        </div>
-        <div className='container'>
-          <div className='rounded-5 border p-3 bg-white shadow' style={{ transform: "translate(0px,-70px)" }}>
-            <div className="row g-2">
-              <div className="col-12 col-lg-2">
-                <Avatar sx={{ maxWidth: "100%", height: 150, width: 150 }}></Avatar>
-              </div>
-              <div className="col-12 col-lg-7">
-                <h1>Saurabh Sharma</h1>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio, sint! Nulla qui, earum nobis sequi at eum natus quod provident nemo? Tempora ad accusamus nostrum hic excepturi minus ut tempore.</p>
-                <span>
-                  <WebTwoTone /> www.saurabhcoded.com
-                </span>
-              </div>
-              <div className="col-12 col-lg-3">
-                <Link href={"/dashboard/add"} passHref><Button variant='contained' size='large' className='rounded text-capitalize'><Edit />&nbsp;Write Blog</Button></Link>
+  }, [token]);
+  useEffect(() => {
+    if (user?.role === "reader") {
+      router.push("/blog");
+    }
+  })
+
+  return (<>
+    <LoginChecker />
+    <div>
+      <div style={{ position: "relative", minHeight: 250, background: "url(/images/banner/banner.webp) no-repeat center", backgroundSize: "cover" }}>
+      </div>
+      <div className='container bg-white rounded-4 shadow' style={{ transform: "translate(0px,-70px)" }}>
+        <div className="row g-3">
+          <div className="col-lg-3">
+            <div className="card border-0 shadow-sm">
+              <Image src={user?.profile} width={200} height={300} className="rounded w-100" alt={user?.name} />
+              <div className="card-body">
+                <h3 className="card-title fw-bold">{user?.name}</h3>
+                <h5 className="card-title">{user?.name}</h5>
+                <Button onClick={() => router.push("/dashboard/add")} variant='outlined' color='secondary' className='text-capitalize rounded-3'><Edit sx={{ fontSize: 20 }} />&nbsp; Write Blog</Button>
               </div>
             </div>
+            {/* List Of Blogs  */}
           </div>
-          {/* List Of Blogs  */}
-          <BlogsTable blogs={blogs} reload={fetchAllBlogs} />
-          <nav aria-label="Page navigation example">
-            <ul className="pagination">
-              <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-              <li className="page-item"><a className="page-link" href="#">1</a></li>
-              <li className="page-item"><a className="page-link" href="#">2</a></li>
-              <li className="page-item"><a className="page-link" href="#">3</a></li>
-              <li className="page-item"><a className="page-link" href="#">Next</a></li>
+          <div className='col-12 col-lg-9'>
+            <ul className="nav nav-pills mb-3" id="pills-tab" role="tablist">
+              <li className="nav-item" role="presentation">
+                <button className="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">{user?.role === "admin" ? "Blogs" : "My Blogs"}</button>
+              </li>
+              {user?.role === "admin" &&
+                <li className="nav-item" role="presentation">
+                  <button className="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Users</button>
+                </li>
+              }
             </ul>
-          </nav>
+            <div className="tab-content" id="pills-tabContent">
+              <div className="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabIndex={0}>
+                <BlogsTable blogs={blogs} reload={fetchAllBlogs} />
+              </div>
+              {user?.role === "admin" &&
+                <div className="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabIndex={0}>
+                  <UsersTable users={users} reload={fetchAllUsers} />
+                </div>
+              }
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
+  </>
   )
 }
 export default Dashboard;

@@ -44,7 +44,6 @@ const Login = () => {
                         break;
                 }
             } catch (error) {
-                console.log(error)
                 let msg = error?.response?.data?.message ? error?.response?.data?.message : "Oops Something Went Wrong!"
                 toast.dismiss();
                 toast.error(msg);

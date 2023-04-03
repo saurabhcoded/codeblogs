@@ -1,5 +1,7 @@
 import { useGlobalContext } from '@/context/globalContext'
+import { Logout } from '@mui/icons-material'
 import { Avatar, Button, IconButton } from '@mui/material'
+import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
@@ -9,7 +11,15 @@ const Navbar = () => {
     return (
         <nav className="navbar navbar-dark navbar-expand-lg bg-dark">
             <div className="container">
-                <a className="navbar-brand" href="#">CodeBlogs</a>
+                <Link href="/" passHref className="navbar-brand">
+                    <div className="d-flex align-items-center">
+                        <Image src={"/images/logo.webp"} height={80} width={80} />
+                        <h3 className="fw-bold lh-1">
+                            CODE <br />
+                            BLOGS
+                        </h3>
+                    </div>
+                </Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon" />
                 </button>
@@ -22,7 +32,7 @@ const Navbar = () => {
                             <Link href="/blog" className="nav-link">Blogs</Link>
                         </li>
                         <li className="nav-item">
-                            <Link href="/aboutus" className="nav-link">About Us</Link>
+                            <Link href="/about" className="nav-link">About Us</Link>
                         </li>
                     </ul>
                     <div className='d-flex align-items-center justify-content-end'>
@@ -34,20 +44,28 @@ const Navbar = () => {
                                             Dropstart
                                         </button> */}
                                         <IconButton data-bs-toggle="dropdown" aria-expanded="false">
-                                            <Avatar></Avatar>
+                                            <Avatar src={user?.profile} alt={user?.name}></Avatar>
                                         </IconButton>
-                                        <ul className="dropdown-menu p-3" style={{ minWidth: 250 }}>
+                                        <ul className="dropdown-menu p-2" style={{ minWidth: 250 }}>
                                             <li>
-                                                <span className="text-success fw-bold fs-5">Welcome,</span>  <br /> {user?.name}
+                                                <div className="dropdown-item bg-white">
+                                                    <span className="text-success fw-bold fs-5">Welcome,</span> <br /> {user?.name}
+                                                </div>
                                             </li>
-                                            <li >
-                                                <Link href={"/dashboard"} className='dropdown-item text-center py-2'>My Dashboard</Link>
-                                            </li>
+                                            {
+                                                user?.role !== "reader" &&
+                                                <>
+                                                    <li>
+                                                        <Link href={"/dashboard"} className='dropdown-item py-2'>My Dashboard</Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link href={"/dashboard/add"} className='dropdown-item py-2'>Add Blogs</Link>
+                                                    </li>
+                                                </>
+                                            }
+
                                             <li>
-                                                <Link href={"/blog/add"} className='dropdown-item text-center py-2'>Add Blogs</Link>
-                                            </li>
-                                            <li className='mt-2'>
-                                                <Button variant='contained' onClick={logoutHandler} color='error' fullWidth className='rounded'>Log Out</Button>
+                                                <Button onClick={logoutHandler} color='error' className='dropdown-item py-2 rounded-0 text-danger text-capitalize'><Logout sx={{ color: "tomato", fontSize: 20 }} /> Log Out</Button>
                                             </li>
                                         </ul>
                                     </div>

@@ -28,16 +28,15 @@ const BlogsTable = ({ blogs, reload }) => {
     }
     return (
         <div className='table-responsive p-2'>
-            <table className="table table-dark table-designed table-striped w-100 shadow-sm rounded-4" style={{ overflow: "hidden" }}>
+            <table className="table table-light table-designed table-striped w-100 shadow-sm rounded-2" style={{ overflow: "hidden" }}>
                 <thead className=''>
                     <tr>
-                        <th scope="col">img</th>
-                        <th scope="col"># ID</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">slug</th>
-                        <th scope="col">Created At</th>
-                        <th scope="col">Updated At</th>
-                        <th scope="col">Action</th>
+                        <th scope="col" className='bg-primary text-white'>img</th>
+                        <th scope="col" className='bg-primary text-white'># ID</th>
+                        <th scope="col" className='bg-primary text-white'>Title</th>
+                        <th scope="col" className='bg-primary text-white'>slug</th>
+                        <th scope="col" className='bg-primary text-white'>Updated At</th>
+                        <th scope="col" className='bg-primary text-white'>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,15 +50,16 @@ const BlogsTable = ({ blogs, reload }) => {
                                 <td>{blog?._id}</td>
                                 <td>{blog?.title}</td>
                                 <td>{blog?.slug}</td>
-                                <td>{moment(blog?.created_at).calendar()}</td>
                                 <td>{moment(blog?.updated_at).calendar()}</td>
                                 <td>
-                                    <IconButton onClick={() => handleDelete(blog?._id)} className='shadow-sm m-1 text-danger' sx={{ background: "whitesmoke" }}>
-                                        <DeleteForever />
-                                    </IconButton>
-                                    <IconButton className='text-success shadow-sm m-1' sx={{ background: "whitesmoke" }}>
-                                        <Edit />
-                                    </IconButton>
+                                    <div className="d-flex">
+                                        <IconButton onClick={() => handleDelete(blog?._id)} className='shadow-sm m-1 text-danger' sx={{ background: "whitesmoke" }}>
+                                            <DeleteForever className='fs-6' />
+                                        </IconButton>
+                                        <IconButton className='text-success shadow-sm m-1' sx={{ background: "whitesmoke" }}>
+                                            <Edit className='fs-6' />
+                                        </IconButton>
+                                    </div>
                                 </td>
                             </tr>
                         </>

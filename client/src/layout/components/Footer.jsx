@@ -2,13 +2,22 @@ import { Button, IconButton } from '@mui/material'
 import Link from 'next/link'
 import React from 'react'
 import { Facebook, Instagram, LinkedIn, Twitter, WhatsApp } from '@mui/icons-material';
+import Image from 'next/image';
 const Footer = () => {
   return (
     <div className='bg-light py-4'>
       <div className="container">
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4">
           <div className="col">
-            <h4>CodeBlogs</h4>
+            <Link href="/" passHref className="navbar-brand">
+              <div className="d-flex align-items-center">
+                <Image src={"/images/logo.webp"} height={80} width={80} />
+                <h3 className="fw-bold lh-1">
+                  CODE <br />
+                  BLOGS
+                </h3>
+              </div>
+            </Link>
             <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae voluptatum distinctio ducimus laudantium tenetur deleniti pariatur amet nemo totam placeat ullam delectus voluptatem deserunt minus, dignissimos, minima quos alias commodi.</p>
             <IconButton sx={{ color: "navy", background: "white" }} className='shadow-sm me-1' href='https://www.facebook.com/' target='_blank'>
               <Facebook />

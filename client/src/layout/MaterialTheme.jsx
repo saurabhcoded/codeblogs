@@ -4,7 +4,7 @@ import React from 'react'
 const theme = createTheme({
     palette: {
         primary: {
-            main: grey[700]
+            main: '#605dba'
         }
     }
 })

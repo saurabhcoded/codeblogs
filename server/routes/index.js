@@ -6,6 +6,7 @@ const projectRouter = require("./project");
 const serviceRouter = require("./service");
 const techRouter = require("./tech");
 const testimonialRouter = require("./testimonial");
+const userRouter = require("./users");
 
 app.use("/services", serviceRouter);
 app.use("/blogs", blogRouter);
@@ -14,5 +15,6 @@ app.use("/testimonial", testimonialRouter);
 app.use("/tech", techRouter);
 app.use("/project", projectRouter);
 app.use("/auth", authRouter);
+app.use("/users", userRouter);
 
 module.exports = app;

@@ -11,27 +11,29 @@ const SingleBlog = ({ blog }) => {
         <div className='container py-4'>
             <div className="row g-2">
                 <div className="col-12 col-lg-8">
+                    <h1>{blogData?.title}</h1>
+                    <Person />{blogData?.author?.name}<small>&nbsp;|&nbsp;updated {moment(blogData?.updated_at).calendar()}</small>
+                    <h5 className='text-secondary my-2'><i>{blogData?.description}</i></h5>
                     <div style={{ position: "relative", height: 500 }}>
-                        <Image src={blogData?.img} alt={blogData?.title} width={1000} height={500} className='d-block' style={{ height: "500px", width: "100%", objectFit: "contain" }} />
+                        <Image src={blogData?.img} alt={blogData?.title} width={1000} height={500} className='d-block border' style={{ height: "500px", width: "100%", objectFit: "contain" }} />
                     </div>
                     <div className='py-3'>
-                        <h1>{blogData?.title}</h1>
-                        <h4 className='text-secondary'><i>{blogData?.description}</i></h4>
-                        <Person />{blogData?.author?.name}<small>updated {moment(blogData?.updated_at).calendar()}</small>
                         <div>
                             {blogData?.content}
                         </div>
                     </div>
                 </div>
                 <div className="col-12 col-lg-4">
-                    <div className="card text-center mx-auto rounded-4" style={{ width: '18rem' }}>
-                        <div className='pt-4'>
-                            <Avatar className="mx-auto rounded" sx={{ height: 150, width: 150 }}></Avatar>
+                    <div className="card text-center mx-auto rounded-0 shadow" style={{ width: '18rem' }}>
+                        <div>
+                            <Image src={blogData?.author?.profile ? blogData?.author?.profile : "/images/avatar/avatar1.jpg"} width={500}
+                                height={300} className="img-fluid border-0 w-100" alt={blogData?.author?.name} style={{ height: 300, objectFit: "cover" }} />
                         </div>
                         <div className="card-body">
-                            <h5 className="card-title">{blogData?.author?.name}</h5>
+                            <h5 className="card-title fw-semibold">
+                                {blogData?.author?.name}
+                            </h5>
                             <p className="card-text"></p>
-                            <a href="#" className="btn btn-primary">Go somewhere</a>
                         </div>
                     </div>
                 </div>
