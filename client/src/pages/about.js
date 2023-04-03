@@ -71,9 +71,9 @@ const About = () => {
                             {
                                 servicesArr?.map((service, i) => {
                                     return (
-                                        <div className="col-md-6 col-lg-3">
+                                        <div className="col-md-6 col-lg-3" key={i}>
                                             <div className="px-md-3 px-lg-0 px-xl-3">
-                                                <Image src={service.img} className='mb-3' height={80} width={80} />
+                                                <Image src={service.img} className='mb-3' alt={service.heading} height={80} width={80} />
                                                 <h4 className='fw-bold text-primary'>{service.heading}</h4>
                                                 <p className="mb-2 fs-5">{service.text}</p>
                                                 <a href={service.link} className="fw-bold">Learn More <ArrowForward /></a>
@@ -86,7 +86,7 @@ const About = () => {
                         <div className="py-4">
                             <div className="row gx-3 gy-10 mb-14 mb-md-16 align-items-center mt-5">
                                 <div className="col-lg-6">
-                                    <figure><img src="/graphics/3d8@2x.png" alt="" className="w-100 d-block" /></figure>
+                                    <figure><img src="/graphics/3d8@2x.png" alt="why us" className="w-100 d-block" /></figure>
                                 </div>
                                 {/*/column */}
                                 <div className="col-lg-5 ms-auto">

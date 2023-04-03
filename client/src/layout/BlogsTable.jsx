@@ -42,7 +42,7 @@ const BlogsTable = ({ blogs, reload }) => {
                 <tbody>
                     {blogs?.map((blog, i) => {
                         return <>
-                            <tr>
+                            <tr key={i}>
                                 <td>
                                     <Image src={blog?.img} width={60}
                                         height={60} className="img-fluid rounded border" alt="..." style={{ maxHeight: 300, objectFit: "cover" }} />

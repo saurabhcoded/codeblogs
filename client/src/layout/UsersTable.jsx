@@ -42,7 +42,7 @@ const UsersTable = ({ users, reload }) => {
                 <tbody>
                     {users?.map((user, i) => {
                         return <>
-                            <tr>
+                            <tr key={i}>
                                 {/* <td>
                                     <Image src={user?.img} width={60}
                                         height={60} className="img-fluid rounded border" alt="..." style={{ maxHeight: 300, objectFit: "cover" }} />

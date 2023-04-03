@@ -114,7 +114,7 @@ const Register = () => {
                                 </div>
                             </div>
                             <div className="form-group mb-2">
-                                <label htmlFor="address" className="form-label">Address <Button variant='outlined' className='rounded text-capitalize'><LocationOn /> Current Location</Button></label>
+                                <label htmlFor="address" className="form-label">Address</label>
                                 <textarea id='address' name='address' type="text" onChange={registerForm.handleChange} className="form-control form-control-lg" defaultValue={registerForm?.values.address}></textarea>
                             </div>
                             <div className='mt-3'>

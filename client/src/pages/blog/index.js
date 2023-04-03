@@ -41,7 +41,7 @@ const Blog = ({ blogs, page }) => {
                     </div>
                 </div>
                 <div>
-                    <img src="/graphics/clouds.png" className='w-100 d-block' alt="" />
+                    <img src="/graphics/clouds.png" className='w-100 d-block' alt="cloud" />
                 </div>
             </div>
             <div className='container py-4'>
