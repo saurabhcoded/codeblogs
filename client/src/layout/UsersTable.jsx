@@ -31,12 +31,12 @@ const UsersTable = ({ users, reload }) => {
             <table className="table table-light table-designed table-striped w-100 shadow-sm rounded-2" style={{ overflow: "hidden" }}>
                 <thead className=''>
                     <tr>
-                        <th scope="col" className='bg-primary text-white'>Full&nbsp;Name</th>
-                        <th scope="col" className='bg-primary text-white'>Contact</th>
-                        <th scope="col" className='bg-primary text-white'>Email</th>
-                        <th scope="col" className='bg-primary text-white'>Role</th>
-                        <th scope="col" className='bg-primary text-white'>Created At</th>
-                        <th scope="col" className='bg-primary text-white'>Action</th>
+                        <th scope="col">Full&nbsp;Name</th>
+                        <th scope="col">Contact</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Created At</th>
+                        <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>

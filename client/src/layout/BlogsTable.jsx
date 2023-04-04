@@ -31,12 +31,12 @@ const BlogsTable = ({ blogs, reload }) => {
             <table className="table table-light table-designed table-striped w-100 shadow-sm rounded-2" style={{ overflow: "hidden" }}>
                 <thead className=''>
                     <tr>
-                        <th scope="col" className='bg-primary text-white'>img</th>
-                        <th scope="col" className='bg-primary text-white'># ID</th>
-                        <th scope="col" className='bg-primary text-white'>Title</th>
-                        <th scope="col" className='bg-primary text-white'>slug</th>
-                        <th scope="col" className='bg-primary text-white'>Updated At</th>
-                        <th scope="col" className='bg-primary text-white'>Action</th>
+                        <th scope="col">img</th>
+                        <th scope="col"># ID</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">slug</th>
+                        <th scope="col">Updated At</th>
+                        <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>

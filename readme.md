@@ -10,3 +10,7 @@
 [4] Sign up As a user and make your account as admin from database
 
 [5] Now you can have access to other bloggers and readers
+
+
+pm2 deploy command for deployment frontend
+pm2 start npm --name "codeblogs" -- deploy
