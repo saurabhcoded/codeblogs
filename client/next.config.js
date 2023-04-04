@@ -4,9 +4,9 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'codeblogs-server.vercel.app',
-        port: '80',
+        protocol: 'http',
+        hostname: '64.227.180.187',
+        port: '6000',
         pathname: '/**',
       },
     ],

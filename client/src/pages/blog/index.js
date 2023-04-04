@@ -101,7 +101,7 @@ export async function getServerSideProps({ params, req, res, query, preview, pre
         return { redirect: { destination: '/dashboard', permanent: false, }, }
     }
     let page = query?.page ? query.page : 0;
-    const data = await fetch('http:localhost:5000/api/blogs?page=' + page);
+    const data = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/blogs?page=' + page);
     const blogs = await data.json();
     if (!data) {
         return { notFound: true, }

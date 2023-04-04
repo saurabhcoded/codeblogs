@@ -46,7 +46,7 @@ export default SingleBlog
 
 export async function getServerSideProps({ params, req, res, query, preview, previewData, resolvedUrl, locale, locales, defaultLocale }) {
     console?.log("QUERY", query)
-    const data = await fetch('http:localhost:5000/api/blogs/' + query?.slug);
+    const data = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/blogs/' + query?.slug);
     const blog = await data.json();
     if (!data) {
         return { notFound: true, }
