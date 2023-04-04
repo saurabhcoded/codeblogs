@@ -9,7 +9,7 @@ const LoginChecker = ({ path }) => {
         if (!user) {
             router.push(path ? path : "/auth/login")
         }
-    },[user])
+    }, [user, path, router])
     return (
         <></>
     )

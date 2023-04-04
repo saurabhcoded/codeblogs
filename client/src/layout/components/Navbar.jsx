@@ -13,7 +13,7 @@ const Navbar = () => {
             <div className="container">
                 <Link href="/" passHref className="navbar-brand">
                     <div className="d-flex align-items-center">
-                        <Image src={"/images/logo.webp"} height={80} width={80} />
+                        <Image src={"/images/logo.webp"} height={80} width={80} alt={"logo"} />
                         <h3 className="fw-bold lh-1">
                             CODE <br />
                             BLOGS
