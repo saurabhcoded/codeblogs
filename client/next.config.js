@@ -4,21 +4,12 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '5000',
-
+        protocol: 'https',
+        hostname: 'codeblogs-server.vercel.app',
+        port: '80',
         pathname: '/**',
       },
     ],
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'https://codeblogs-server.vercel.app/:path*',
-      },
-    ]
   },
 }
 
