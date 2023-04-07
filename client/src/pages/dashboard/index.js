@@ -86,7 +86,7 @@ const Dashboard = () => {
         <div className="row g-3">
           <div className="col-lg-3">
             <div className="card border-0 shadow-sm">
-              <Image src={user?.profile} width={200} height={300} className="rounded w-100" alt={user?.name} />
+              <Image src={user?.profile} width={200} height={300} className="rounded w-100" style={{ objectFit: "cover" }} alt={user?.name} />
               <div className="card-body">
                 <h3 className="card-title fw-bold">{user?.name}</h3>
                 <h5 className="card-title">{user?.name}</h5>

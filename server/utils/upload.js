@@ -49,5 +49,17 @@ const imgUrl = (file) => {
     return false;
   }
 };
+const deleteImg = (link) => {
+  if (link) {
+    const backendUrl = process.env.ADMIN_URL;
+    let path = link.replace(backendUrl, "");
+    clog.warning(path);
+    let CheckDir = fs.existsSync(path);
+    if (CheckDir) {
+      fs.unlinkSync(path);
+    }
+  }
+}
 module.exports = upload;
 module.exports.imgUrl = imgUrl;
+module.exports.deleteImg = deleteImg;

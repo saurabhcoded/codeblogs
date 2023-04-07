@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Urbanist:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 :root {
   --bs-blue: #605dba !important;
   --bs-primary-rgb: #605dba !important;
@@ -12,6 +12,9 @@
 }
 .text-primary {
   color: #605dba !important;
+}
+.ubuntu {
+  font-family: "Ubuntu", sans-serif;
 }
 .form-control {
   padding-top: 12px;
@@ -40,6 +43,13 @@ td {
   -webkit-line-clamp: 3;
   overflow: hidden;
 }
+.line-clamp-2 {
+  width: 100%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
 .pagination .page-item a {
   padding: 10px 20px 2px 20px !important;
   margin: 5px;
@@ -50,4 +60,13 @@ td {
 .fill-primary,
 .text-grape {
   color: #605dba !important;
+}
+
+.content-box pre.ql-syntax {
+  background: #2d333f;
+  color: #eaeaea;
+  padding: 20px;
+  font-size: 16px;
+  font-family: "Ubuntu", sans-serif !important;
+  cursor: grab;
 }

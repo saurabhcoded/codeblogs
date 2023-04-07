@@ -2,13 +2,24 @@ const slugify = require("slugify");
 const BLOG = require("../../models/blog");
 
 const clog = require("../../utils/chalk");
-const { imgUrl } = require("../../utils/upload");
+const { imgUrl, deleteImg } = require("../../utils/upload");
 const getBlogs = async (req, res) => {
   console.log("query", req.query);
   const page = req?.query?.page ? req?.query?.page : 0;
+  let search = req.query?.search ? req.query?.search : '';
+  const rgx = (pattern) => new RegExp(`.*${pattern}.*`);
+  const searchRgx = rgx(search);
+  let sort = req.query?.sort ? req.query?.sort : 'created_at';
+  let sortPara = req.query?.sortPara ? req.query?.sortPara : -1
   try {
     const blogsCount = await BLOG.count();
-    const result = await BLOG.find().populate("author", "name _id profile").limit(10).skip(page * 10);
+    const result = await BLOG.find({
+      $or: [
+        { title: { $regex: searchRgx } },
+        { description: { $regex: searchRgx } },
+      ],
+    }).populate("author", "name _id profile").limit(10).skip(page * 10).sort({ [sort]: sortPara });
+    console.log(result);
     res.json({ status: "success", result, count: blogsCount });
   } catch (error) {
     clog.error(error);
@@ -26,10 +37,8 @@ const getPersonalBlogs = async (req, res) => {
     res.json({ status: "error", message: "Internal Server Error" });
   }
 };
-
 const postBlogs = async (req, res) => {
   const img = imgUrl(req.file);
-  console.log(req?.body)
   const { title, slug, content, author, description } = req.body;
   try {
     if (title && content && img && slug && description && author) {
@@ -42,7 +51,6 @@ const postBlogs = async (req, res) => {
         author
       };
       const newBLOG = await (await BLOG.create(body)).save();
-      clog.info(newBLOG);
       res.json({ status: "success", message: "BLOG Added Succesfully", result: newBLOG });
     } else {
       res.json({ status: "error", message: "Error 404 body not found" });
@@ -53,32 +61,57 @@ const postBlogs = async (req, res) => {
   }
 };
 const updateBlogs = async (req, res) => {
-  const { title, content, img, icon } = req.body;
+  let img;
+  if (req.file) {
+    img = imgUrl(req.file);
+  }
+  const {
+    title,
+    slug,
+    description,
+    content,
+  } = req.body;
   const { id } = req.query;
-  clog.info(req.body);
+  let result;
   try {
     if (id) {
-      const updateBLOG = await BLOG.findByIdAndUpdate(id, {
-        title: title,
-        slug: slugify(String(title)).toLowerCase(),
-        content,
+      const updateBLOG = await BLOG.findOneAndUpdate({ slug: id }, {
+        title,
+        slug,
+        description,
         img,
-        icon,
+        content,
       });
-      res.status(200).json({ message: "Updated Successfully", result: updateBLOG });
+      result = updateBLOG;
+      res.json({ status: "success", message: "Updated Successfully", result });
     } else {
-      res.status(404).json({ message: "BLOG ID not Found" });
+      res.json({ status: "error", message: "BLOG ID not Found" });
     }
   } catch (error) {
-    clog.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.json({ status: "error", message: "Internal Server Error" });
+  }
+  if (req.file) {
+    deleteImg(result.img);
   }
 };
 const deleteBlogs = async (req, res) => {
   const id = req.query.id;
+  const user = req.user;
+  clog.error({ user })
   try {
     if (id) {
-      const deleteBLOG = await BLOG.deleteOne({ _id: id });
+      let deleteBLOG;
+      switch (user?.role) {
+        case "admin":
+          deleteBLOG = await BLOG.deleteOne({ _id: id });
+          break;
+        case "author":
+          deleteBLOG = await BLOG.deleteOne({ _id: id, author: user._id });
+          break;
+        default:
+          break;
+      }
+
       if (deleteBLOG?.deletedCount) {
         res.status(200).json({ message: "BLOG Deleted Succesfully" });
       } else {

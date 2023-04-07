@@ -1,3 +1,4 @@
+import SearchListItem from '@/layout/SearchListItem'
 import SingleBlogListItem from '@/layout/SingleBlogListItem'
 import SingleBloggerListItem from '@/layout/SingleBloggerListItem'
 import useApi from '@/lib/useApi'
@@ -10,7 +11,9 @@ import { toast } from 'react-toastify'
 
 const Blog = ({ blogs, page }) => {
     console.log("BLOGS", blogs);
+    const [searchList, setSearchList] = useState([]);
     const router = useRouter();
+    const ENDPOINT = useApi();
     const count = blogs?.count;
     const [showLoad, setShowLoad] = useState(true);
     const loadMoreHandler = (dir) => {
@@ -25,6 +28,21 @@ const Blog = ({ blogs, page }) => {
                 setShowLoad(false)
             }
         }
+    }
+    const [searchText, setSeachText] = useState("")
+    const searchBlogsList = async (searchKey) => {
+        try {
+            const response = await ENDPOINT.json.get("/blogs?search=" + searchKey)
+            console.log(response);
+            if (response.data?.status === "success") {
+                setSearchList(response?.data?.result)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    const handleSearch = () => {
+        searchBlogsList(searchText);
     }
     return (
         <>
@@ -48,8 +66,6 @@ const Blog = ({ blogs, page }) => {
                 <div className="row g-2">
                     <div className="col-12 col-lg-9">
                         <div>
-                            {/* Sorting and Searching  */}
-
                             {/* List Of Blogs  */}
                             <div className='row row-cols-1 row-cols-lg-2 g-3'>
                                 {blogs?.result?.map((blog, i) => {
@@ -69,8 +85,8 @@ const Blog = ({ blogs, page }) => {
                     <div className="col-12 col-lg-3">
                         <div>
                             <div className="input-group mb-2">
-                                <input type="text" className="form-control form-control-lg border-dark rounded-0" />
-                                <Button variant='contained' size='small' className="btn btn-dark btn-lg rounded-0"><Search /></Button>
+                                <input type="text" value={searchText} onChange={(e) => setSeachText(e.target.value)} className="form-control form-control-lg border-dark rounded-0" />
+                                <Button variant='contained' onClick={handleSearch} size='small' className="btn btn-dark btn-lg rounded-0"><Search /></Button>
                             </div>
                             <div className='mb-3 row row-cols-2 g-2'>
                                 <div className='col'>
@@ -86,6 +102,12 @@ const Blog = ({ blogs, page }) => {
                                     <button className="btn btn-outline-dark h-100 w-100 rounded-0 ">Apply</button>
                                 </div>
                             </div>
+                            <div>
+                                {searchList.length ? <div className='pt-2 border-top d-flex align-items-center justify-content-between w-100'><h5 className='fw-semibold'>Search Result</h5><Button onClick={()=>{setSearchList([]);setSeachText("");}} color='error'>clear</Button></div>: ""}
+                                {searchList?.map((item, i) => {
+                                    return <SearchListItem key={i} blog={item} />
+                                })}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -100,6 +122,7 @@ export async function getServerSideProps({ params, req, res, query, preview, pre
     if (query.text) {
         return { redirect: { destination: '/dashboard', permanent: false, }, }
     }
+    console.log("url", process.env.NEXT_PUBLIC_BACKEND_URL)
     let page = query?.page ? query.page : 0;
     const data = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/blogs?page=' + page);
     const blogs = await data.json();

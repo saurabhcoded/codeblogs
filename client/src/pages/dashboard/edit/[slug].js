@@ -1,11 +1,9 @@
-import { useGlobalContext } from '@/context/globalContext'
-import useApi from '@/lib/useApi'
-import * as yup from 'yup';
-import { useFormik } from 'formik'
+import useApi from '@/lib/useApi';
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { toast } from 'react-toastify'
 import slugify from 'slugify'
+import * as yup from 'yup';
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(import('react-quill'), { ssr: false })
 import 'react-quill/dist/quill.snow.css';
@@ -14,6 +12,8 @@ import { Person, Person3Outlined, RemoveCircleOutlineTwoTone } from '@mui/icons-
 import Image from 'next/image';
 import Link from 'next/link';
 import moment from 'moment';
+import { useGlobalContext } from '@/context/globalContext';
+import { useFormik } from 'formik';
 
 const modules = {
     toolbar: [
@@ -36,10 +36,11 @@ const validationSchema = new yup.object({
     description: yup.string().required("Description is required"),
     content: yup.string().required("Description is required"),
 });
-
-const AddBlog = () => {
-    const ENDPOINT = useApi();
+const EditBlog = () => {
     const router = useRouter();
+    const ENDPOINT = useApi();
+    const blogId = router.query?.slug;
+    console.log("router", router.query);
     const { user } = useGlobalContext();
     const blogForm = useFormik({
         initialValues: {
@@ -52,7 +53,7 @@ const AddBlog = () => {
         validationSchema,
         onSubmit: async (values, action) => {
             try {
-                const response = await ENDPOINT.authformdata.post("/blogs", { ...values, author: user?.id });
+                const response = await ENDPOINT.authformdata.put("/blogs?id=" + blogId, { ...values });
                 console?.log(response)
                 switch (response?.data?.status) {
                     case "success":
@@ -89,6 +90,25 @@ const AddBlog = () => {
             router.push("/blog");
         }
     }, [user]);
+
+    const fethcBlogData = async () => {
+        try {
+            const response = await ENDPOINT.authjson("/blogs/" + blogId);
+            console.log("Data", response);
+            if (response?.data?.status === "success") {
+                const data = response?.data?.result;
+                blogForm?.setFieldValue("title", data?.title);
+                blogForm?.setFieldValue("description", data?.description);
+                blogForm?.setFieldValue("img", data?.img);
+                blogForm?.setFieldValue("content", data?.content);
+            }
+        } catch (error) {
+            toast.dismiss("OOps Something went wrong")
+        }
+    }
+    useEffect(() => {
+        fethcBlogData();
+    }, [blogId])
     return (
         <>
             <div className="bg-light">
@@ -143,7 +163,10 @@ const AddBlog = () => {
                                             </div>
                                         </div>
 
-                                        {blogForm.values.img ? <Image className='rounded w-100 mt-3' style={{ objectFit: "contain", border: "1px dotted grey" }} alt="main" src={blogForm.values.img ? URL.createObjectURL(blogForm.values.img) : ""} height={300} width={300} /> : ""}
+                                        {blogForm.values.img ? <Image className='rounded w-100 mt-3' style={{ objectFit: "contain", border: "1px dotted grey" }} alt="main"
+                                            src={typeof (blogForm.values.img) == "string" ?
+                                                blogForm.values.img :
+                                                URL.createObjectURL(blogForm.values.img)} height={300} width={300} /> : ""}
                                     </div>
                                     <span className='text-danger text-start fw-bold'>{blogForm.touched.img && blogForm.errors.img}</span>
                                 </div>
@@ -156,7 +179,7 @@ const AddBlog = () => {
                                                 </div>
                                             </div>
                                             :
-                                            "Publish Blog"
+                                            "Save Blog"
                                         }
                                     </Button>
                                 </div>
@@ -169,10 +192,9 @@ const AddBlog = () => {
                                 blogForm.values?.title ? <p><i className='text-dark mt-2'>{blogForm?.values?.description}</i></p> : ""
                             }
                             {
-                                blogForm.values?.img ? <Image className='rounded w-100 mt-3' style={{ objectFit: "cover", objectPosition: "top", border: "1px dotted grey" }} alt="main" src={blogForm.values.img ? URL.createObjectURL(blogForm.values.img) : ""} height={500} width={300} /> : ""
+                                blogForm.values?.img ? <Image className='rounded w-100 mt-3' style={{ objectFit: "cover", objectPosition: "top", border: "1px dotted grey" }} alt="main" src={blogForm.values.img ? typeof (blogForm.values.img) == "string" ? blogForm.values.img : URL.createObjectURL(blogForm.values.img) : ""} height={500} width={300} /> : ""
                             }
-                            <ReactQuill modules={modules} theme="snow" name='content' onChange={(data) => blogForm.setFieldValue("content", data)} placeholder="Content goes here..." className='mb-5 mt-3' style={{ height: 700 }} />
-
+                            <ReactQuill modules={modules} theme="snow" name='content' value={blogForm?.values?.content} onChange={(data) => blogForm.setFieldValue("content", data)} placeholder="Content goes here..." className='mb-5 mt-3' style={{ height: 700 }} />
                         </div>
                     </div>
                 </form>
@@ -181,4 +203,4 @@ const AddBlog = () => {
     )
 }
 
-export default AddBlog
+export default EditBlog
