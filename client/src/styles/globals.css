@@ -70,3 +70,7 @@ td {
   font-family: "Ubuntu", sans-serif !important;
   cursor: grab;
 }
+
+button{
+  text-transform: capitalize !important;
+}

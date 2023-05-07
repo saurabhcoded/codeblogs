@@ -50,12 +50,11 @@ const Register = () => {
             phone: "",
             password: "",
             confirm_password: "",
-            role: "reader",
+            role: "author",
             address: ""
         },
         validationSchema,
         onSubmit: async (values, action) => {
-            alert("Submitting")
             try {
                 toast.dismiss();
                 toast.loading("Creating Your Account");
@@ -92,66 +91,50 @@ const Register = () => {
         }
     }, [currentLocation.currentAddress])
     return (
-        <div className='py-4'>
+        <div className='py-4 bg-light'>
             <div className="row g-0 justify-content-center align-items-center h-100">
                 <div className="col-12 col-lg-4">
-                    <div className='rounded mx-auto p-3 p-lg-4'>
-                        <h4 className='fw-bold text-center fs-1'>
+                    <div className='rounded border bg-white shadow mx-auto p-3 p-lg-4'>
+                        <h4 className='fw-bold text-center fs-3'>
                             Register Form
                         </h4>
                         {/* simple login  */}
                         <form onSubmit={registerForm.handleSubmit} className='row g-3 mt-1'>
                             <div className="form-group col-12">
                                 <h5 className='fw-semibold'>Profile Picture</h5>
-                                <div className="d-flex align-items-center justify-content-between">
-                                    <div className="d-flex">
-                                        <Button variant="contained" component="label" className='rounded-pill px-4 py-2'>
+                                <div className="d-flex align-items-center justify-content-start">
+                                    <Avatar sx={{ height: 80, width: 80 }} className='rounded' alt="Cindy Baker" src={registerForm.values.profile ? URL.createObjectURL(registerForm.values.profile) : ""} />
+                                    <div className="d-flex ms-2">
+                                        <Button variant="contained" component="label" className='rounded-2 px-4 py-2'>
                                             {registerForm.values.profile ? "Update" : "Upload"}
                                             <input label={"profile"} type="file" onChange={(e) => registerForm.setFieldValue("profile", e.target.files[0])} hidden accept="image/*" />
                                         </Button>
                                         {registerForm.values.profile ?
-                                            <Button onClick={() => registerForm.setFieldValue("profile", "")} variant='contained' color='error' className='rounded-pill ms-2'>
+                                            <Button onClick={() => registerForm.setFieldValue("profile", "")} variant='contained' color='error' className='rounded-2 ms-2'>
                                                 <RemoveCircleOutlineSharp className='fs-6' />&nbsp;Remove
                                             </Button> : ""
                                         }
                                     </div>
-                                    <Avatar sx={{ height: 100, width: 100 }} alt="Cindy Baker" src={registerForm.values.profile ? URL.createObjectURL(registerForm.values.profile) : ""} />
                                 </div>
                             </div>
                             <div className="form-group col-12">
                                 <TextField label={"Full Name"} fullWidth id='name' name='name' onChange={registerForm.handleChange} value={registerForm.values.name} type="text" error={registerForm.touched.name && registerForm.errors.name} helperText={registerForm.touched.name && registerForm.errors.name} />
                             </div>
-                            <div className="form-group col-12">
+                            <div className="form-group col-12 col-lg-6">
                                 <TextField label={"Email Address"} fullWidth id='email' name='email' onChange={registerForm.handleChange} value={registerForm.values.email} type="text" error={registerForm.touched.email && registerForm.errors.email} helperText={registerForm.touched.email && registerForm.errors.email} />
                             </div>
-                            <div className="form-group col-12">
+                            <div className="form-group col-12 col-lg-6">
                                 <label htmlFor="phone" className="form-label"></label>
                                 <TextField label={"Contact Number"} id='phone' name='phone' onChange={registerForm.handleChange} value={registerForm.values.phone} type="text" fullWidth error={registerForm.touched.phone && registerForm.errors.phone} helperText={registerForm.touched.phone && registerForm.errors.phone} />
                             </div>
                             <div className="form-group col-6">
-                                <TextField label={"Password"} id='password' name='password' onChange={registerForm.handleChange} value={registerForm.values.password} type="text" fullWidth error={registerForm.touched.password && registerForm.errors.password} helperText={registerForm.touched.password && registerForm.errors.password} />
+                                <TextField label={"Password"}  type={"password"} id='password' name='password' onChange={registerForm.handleChange} value={registerForm.values.password} fullWidth error={registerForm.touched.password && registerForm.errors.password} helperText={registerForm.touched.password && registerForm.errors.password} />
                             </div>
                             <div className="form-group col-6">
-                                <TextField label={"Confirm Password"} id='confirm_password' name='confirm_password' onChange={registerForm.handleChange} value={registerForm.values.confirm_password} type="text" fullWidth error={registerForm.touched.confirm_password && registerForm.errors.confirm_password} helperText={registerForm.touched.confirm_password && registerForm.errors.confirm_password} />
-                            </div>
-                            <div className="form-group col-12">
-                                <FormControl>
-                                    <FormLabel id="role-radio">You are a</FormLabel>
-                                    <RadioGroup
-                                        id='role'
-                                        className='flex-row'
-                                        name={"role"}
-                                        aria-labelledby="role-radio"
-                                        value={registerForm.values.role}
-                                        onChange={registerForm.handleChange}
-                                    >
-                                        <FormControlLabel value="reader" control={<Radio />} label="Reader" />
-                                        <FormControlLabel value="author" control={<Radio />} label="Author" />
-                                    </RadioGroup>
-                                </FormControl>
+                                <TextField label={"Confirm Password"} type={"password"} id='confirm_password' name='confirm_password' onChange={registerForm.handleChange} value={registerForm.values.confirm_password} t fullWidth error={registerForm.touched.confirm_password && registerForm.errors.confirm_password} helperText={registerForm.touched.confirm_password && registerForm.errors.confirm_password} />
                             </div>
                             <div className="form-group mb-2">
-                                <TextField label={"Address"} fullWidth multiline rows={5} id='address' name='address' type="text" onChange={registerForm.handleChange} value={registerForm?.values.address} error={registerForm.touched.address && registerForm.errors.address} helperText={registerForm.touched.address && registerForm.errors.address} />
+                                <TextField label={"Address"} size={"small"} fullWidth multiline rows={3} id='address' name='address' type="text" onChange={registerForm.handleChange} value={registerForm?.values.address} error={registerForm.touched.address && registerForm.errors.address} helperText={registerForm.touched.address && registerForm.errors.address} />
                             </div>
                             <div className='mt-3'>
                                 <Button variant='contained' type='submit' color={registerForm.isSubmitting ? "success" : "primary"} fullWidth className={`rounded text-capitalize py-3 fs-5`} disabled={registerForm.isSubmitting}>
@@ -170,9 +153,6 @@ const Register = () => {
                         </form>
                         {/* login with google  */}
                     </div>
-                </div>
-                <div className="col-12 col-lg-8">
-
                 </div>
             </div>
         </div>

@@ -33,7 +33,6 @@ const BlogsTable = ({ blogs, reload }) => {
                 <thead className=''>
                     <tr>
                         <th scope="col">img</th>
-                        <th scope="col"># ID</th>
                         <th scope="col">Title</th>
                         <th scope="col">slug</th>
                         <th scope="col">Updated At</th>
@@ -45,10 +44,11 @@ const BlogsTable = ({ blogs, reload }) => {
                         return <>
                             <tr key={i}>
                                 <td>
-                                    <Image src={blog?.img} width={100}
-                                        height={60} className="img-fluid rounded border" alt="..." style={{ height: 60, width: 100, objectFit: "cover", objectPosition: "top" }} />
+                                    <Link href={"/blog/" + blog?.slug}>
+                                        <Image src={blog?.img} width={100}
+                                            height={60} className="img-fluid rounded border" alt="..." style={{ height: 60, width: 100, objectFit: "cover", objectPosition: "top" }} />
+                                    </Link>
                                 </td>
-                                <td>{blog?._id}</td>
                                 <td>{blog?.title}</td>
                                 <td>{blog?.slug}</td>
                                 <td>{moment(blog?.updated_at).calendar()}</td>

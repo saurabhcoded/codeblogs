@@ -1,5 +1,7 @@
 import { useGlobalContext } from '@/context/globalContext'
 import BlogsTable from '@/layout/BlogsTable'
+import ExperienceTable from '@/layout/ExperienceTable'
+import SideDrawer from '@/layout/SideDrawer'
 import SingleBlogListItem from '@/layout/SingleBlogListItem'
 import UsersTable from '@/layout/UsersTable'
 import BlogCard from '@/layout/components/BlogCard'
@@ -79,7 +81,7 @@ const Dashboard = () => {
 
   return (<>
     <LoginChecker />
-    <div>
+    <div style={{ position: "relative" }}>
       <div style={{ position: "relative", minHeight: 250, background: "url(/images/banner/banner.webp) no-repeat center", backgroundSize: "cover" }}>
       </div>
       <div className='container bg-white rounded-4 shadow' style={{ transform: "translate(0px,-70px)" }}>
@@ -116,6 +118,7 @@ const Dashboard = () => {
                 </div>
               }
             </div>
+            <ExperienceTable />
           </div>
         </div>
       </div>
